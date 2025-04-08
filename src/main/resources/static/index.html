@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookstore</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #e0c3fc, #8ec5fc);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+        }
+        .book-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .book {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin: 15px;
+            padding: 15px;
+            width: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .book img {
+            max-width: 80px;
+            height: auto;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .delete-button {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .update-button {
+            background-color: blue;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .update-button:hover, .delete-button:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Bookstore</h1>
+<div class="book-container" id="bookContainer"></div>
+
+<script>
+    const bookContainer = document.getElementById('bookContainer');
+
+    // Fetch books from the API
+    function fetchBooks() {
+        fetch('/books')
+            .then(response => response.json())
+            .then(data => {
+                bookContainer.innerHTML = '';
+                data.forEach(book => {
+                    const bookDiv = document.createElement('div');
+                    bookDiv.className = 'book';
+                    bookDiv.innerHTML = `
+                        <h2>${book.title}</h2>
+                        <img src="${book.image}" alt="${book.title}">
+                        <p>Price: $${book.price}</p>
+                        <div class="buttons">
+                            <button class="update-button" onclick="updateBook(${book.id})">Update</button>
+                            <button class="delete-button" onclick="deleteBook(${book.id})">Delete</button>
+                        </div>
+                    `;
+                    bookContainer.appendChild(bookDiv);
+                });
+            });
+    }
+
+    // Delete a book
+    function deleteBook(id) {
+        fetch(`/books/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: id })
+        })
+        .then(response => {
+            if (response.ok) {
+                fetchBooks();
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    // Update a book (for demonstration purposes, it'll just alert the user)
+    function updateBook(id) {
+        const newTitle = prompt("Enter new title for the book:");
+        const newPrice = prompt("Enter new price for the book:");
+        const newImage = prompt("Enter new image URL for the book:");
+
+        if (newTitle && newPrice && newImage) {
+            fetch(`/books/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    title: newTitle,
+                    price: newPrice,
+                    image: newImage
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    fetchBooks();
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    }
+
+    // Initial fetch of books
+    fetchBooks();
+</script>
+</body>
+</html>
