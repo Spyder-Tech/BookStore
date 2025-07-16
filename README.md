@@ -20,6 +20,12 @@ Prerequisites
     Java 11 or higher
     Maven or Gradle build tool
     MySQL Database Server
+    spring.datasource.url=jdbc:mysql://localhost:3306/bookstore?useSSL=false&serverTimezone=UTC
+    spring.datasource.username=your_db_username
+    spring.datasource.password=your_db_password
+    spring.jpa.hibernate.ddl-auto=update
+    spring.jpa.show-sql=true
+
 
 Setup Instructions
 1. Clone the Repository
@@ -46,12 +52,11 @@ CREATE DATABASE bookstore;
 In src/main/resources/application.properties, set your database connection details:
 
           
-
-spring.datasource.url=jdbc:mysql://localhost:3306/bookstore?useSSL=false&serverTimezone=UTC
-spring.datasource.username=your_db_username
-spring.datasource.password=your_db_password
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
+    spring.datasource.url=jdbc:mysql://localhost:3306/bookstore?useSSL=false&serverTimezone=UTC
+    spring.datasource.username=your_db_username
+    spring.datasource.password=your_db_password
+    spring.jpa.hibernate.ddl-auto=update
+    spring.jpa.show-sql=true
 
       
 
